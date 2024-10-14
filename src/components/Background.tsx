@@ -1,4 +1,4 @@
-import { Img, OffthreadVideo } from "remotion";
+import { AbsoluteFill, Img, OffthreadVideo } from "remotion";
 import { imgExt, videoExt } from "../constants/BackgroundFileTypeExt";
 import LoopedOffthreadVideoContainer from "./LoopedOffthreadVideoContainer";
 import { getVideoMetadata } from "@remotion/media-utils";
@@ -14,6 +14,12 @@ function getFileType(ext: string) {
   if (imgExt.includes(ext)) return BackgroundType.Img;
   if (videoExt.includes(ext)) return BackgroundType.Video;
   return BackgroundType.Dissupport;
+}
+
+function getStyle(type: BackgroundType) {
+  if (type === BackgroundType.Img) return { transform: "translateY(-18%)" };
+  if (type === BackgroundType.Video) return { width: "100%" };
+  return { fontSize: "120px", color: "black" };
 }
 
 const Background: React.FC<{
@@ -36,37 +42,20 @@ const Background: React.FC<{
     }
   }, [fileName]);
 
+  const bgStyle = getStyle(fileType);
+  let content = <div style={bgStyle}>This file format is not support.</div>;
+
   if (fileType === BackgroundType.Video) {
-    return (
+    content = (
       <LoopedOffthreadVideoContainer durationInSeconds={durationInSeconds}>
-        <OffthreadVideo
-          muted
-          className="cover"
-          style={{
-            width: "100%",
-            zIndex: -1,
-            position: "absolute",
-          }}
-          src={fileName}
-        />
+        <OffthreadVideo muted style={bgStyle} src={fileName} />
       </LoopedOffthreadVideoContainer>
     );
   }
   if (fileType === BackgroundType.Img) {
-    return (
-      <Img
-        className="cover"
-        style={{
-          width: "100%",
-          transform: "translateY(-18%)",
-          zIndex: -1,
-          position: "absolute",
-        }}
-        src={fileName}
-      />
-    );
+    content = <Img style={bgStyle} src={fileName} />;
   }
-  return <div>This format is not support.</div>;
+  return <AbsoluteFill>{content}</AbsoluteFill>;
 };
 
 export default Background;
