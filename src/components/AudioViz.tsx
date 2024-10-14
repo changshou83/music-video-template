@@ -1,8 +1,25 @@
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import {
+  interpolate,
+  interpolateColors,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
 import { useAudioData, visualizeAudio } from "@remotion/media-utils";
 
+function getBackgroundColors(
+  waveColor: string[],
+  frequenciesToDisplay: number[],
+) {
+  const range = waveColor.map((v, i) =>
+    interpolate(i, [0, waveColor.length], [0, frequenciesToDisplay.length]),
+  );
+  return frequenciesToDisplay.map((v, i) => {
+    return interpolateColors(i, range, waveColor);
+  });
+}
+
 const AudioViz: React.FC<{
-  waveColor: string;
+  waveColor: string[];
   numberOfSamples: number;
   freqRangeStartIndex: number;
   waveLinesToDisplay: number;
@@ -43,6 +60,7 @@ const AudioViz: React.FC<{
   const frequenciesToDisplay = mirrorWave
     ? [...frequencyDataSubset.slice(1).reverse(), ...frequencyDataSubset]
     : frequencyDataSubset;
+  const backgroundColors = getBackgroundColors(waveColor, frequenciesToDisplay);
 
   return (
     <div className="audio-viz">
@@ -53,7 +71,7 @@ const AudioViz: React.FC<{
             className="bar"
             style={{
               minWidth: "1px",
-              backgroundColor: waveColor,
+              backgroundColor: backgroundColors[i],
               height: `${500 * Math.sqrt(v)}%`,
             }}
           />

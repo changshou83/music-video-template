@@ -18,7 +18,7 @@ export const AudioGramSchema = z.object({
     .refine((s) => coverFileNameType.some((ext) => s.endsWith(ext)), {
       message: `File must be a ${coverFileNameType.map((ext) => `.${ext}`).join(" / ")} file`,
     }),
-  waveColor: zColor(),
+  waveColor: z.array(zColor()).min(2),
   subtitlesTextColor: zColor(),
   subtitlesLinePerPage: z.number().int().min(0),
   subtitlesLineHeight: z.number().int().min(0),
