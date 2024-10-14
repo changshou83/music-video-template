@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
+import { imgExt, videoExt } from "../constants/BackgroundFileTypeExt";
+
+const coverFileNameType = [...imgExt, ...videoExt];
 
 export const AudioGramSchema = z.object({
   durationInSeconds: z.number().positive(),
@@ -10,18 +13,11 @@ export const AudioGramSchema = z.object({
   audioFileName: z.string().refine((s) => s.endsWith(".mp3"), {
     message: "Audio file must be a .mp3 file",
   }),
-  coverImgFileName: z
+  coverFileName: z
     .string()
-    .refine(
-      (s) =>
-        s.endsWith(".jpg") ||
-        s.endsWith(".jpeg") ||
-        s.endsWith(".png") ||
-        s.endsWith(".bmp"),
-      {
-        message: "Image file must be a .jpg / .jpeg / .png / .bmp file",
-      },
-    ),
+    .refine((s) => coverFileNameType.some((ext) => s.endsWith(ext)), {
+      message: `File must be a ${coverFileNameType.map((ext) => `.${ext}`).join(" / ")} file`,
+    }),
   waveColor: zColor(),
   subtitlesTextColor: zColor(),
   subtitlesLinePerPage: z.number().int().min(0),

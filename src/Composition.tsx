@@ -4,24 +4,24 @@ import {
   Audio,
   continueRender,
   delayRender,
-  Img,
   Sequence,
   useVideoConfig,
 } from "remotion";
+import { z } from "zod";
 
 export const fps = 30;
 
-import { PaginatedSubtitles } from "./components/Subtitles";
-import { z } from "zod";
-import AudioViz from "./components/AudioViz";
 import { AudioGramSchema } from "./schema/AudioGramSchema";
+import AudioViz from "./components/AudioViz";
+import Background from "./components/Background";
+import { PaginatedSubtitles } from "./components/Subtitles";
 
 type AudiogramCompositionSchemaType = z.infer<typeof AudioGramSchema>;
 
 export const AudiogramComposition: React.FC<AudiogramCompositionSchemaType> = ({
   subtitlesFileName,
   audioFileName,
-  coverImgFileName,
+  coverFileName,
   subtitlesTextColor,
   subtitlesLinePerPage,
   waveColor,
@@ -64,22 +64,8 @@ export const AudiogramComposition: React.FC<AudiogramCompositionSchemaType> = ({
         <Sequence from={-audioOffsetInFrames}>
           <Audio pauseWhenBuffering src={audioFileName} />
 
-          <div
-            className="container"
-            style={{
-              fontFamily: "IBM Plex Sans",
-            }}
-          >
-            <Img
-              className="cover"
-              style={{
-                width: "100%",
-                transform: "translateY(-18%)",
-                zIndex: -1,
-                position: "absolute",
-              }}
-              src={coverImgFileName}
-            />
+          <div className="container">
+            <Background fileName={coverFileName} />
 
             <div style={{ position: "absolute", bottom: 0 }}>
               <div>
