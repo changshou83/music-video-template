@@ -20,7 +20,7 @@ const getVideoSettings = (): z.infer<typeof AudioGramSchema> => {
     subtitlesLineHeight: 72, // 根据单行或双行歌词进行修改
 
     // Wave settings
-    waveColor: ["#9E9E9E", "red", "green"], // 根据当前封面图片进行修改
+    waveColor: ["#9E9E9E", "red"], // 根据当前封面图片进行修改
     waveFreqRangeStartIndex: 7,
     waveLinesToDisplay: 100,
     waveNumberOfSamples: "256", // This is string for Remotion controls and will be converted to a number

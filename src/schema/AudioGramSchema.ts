@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
-import { imgExt, videoExt } from "../constants/BackgroundFileTypeExt";
+import { imgExt } from "../constants/BackgroundFileTypeExt";
 
-const coverFileNameType = [...imgExt, ...videoExt];
+const coverFileNameType = [...imgExt];
 
 export const AudioGramSchema = z.object({
   durationInSeconds: z.number().positive(),

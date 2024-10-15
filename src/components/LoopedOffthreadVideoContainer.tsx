@@ -1,20 +1,18 @@
 import { Loop, useVideoConfig } from "remotion";
+import { AudioGramSchema } from "../schema/AudioGramSchema";
+import { z } from "zod";
 
 const LoopedOffthreadVideoContainer: React.FC<{
-  durationInSeconds: number | null;
   children: React.ReactNode;
-}> = ({ durationInSeconds, children }) => {
-  const { fps } = useVideoConfig();
+}> = ({ children }) => {
+  const { defaultProps, fps } = useVideoConfig();
+  const { durationInSeconds } = defaultProps as z.infer<typeof AudioGramSchema>;
 
-  if (durationInSeconds === null) {
-    return null;
+  let durationInFrames = 9999;
+  if (durationInSeconds) {
+    durationInFrames = Math.floor(fps * durationInSeconds);
   }
-
-  return (
-    <Loop durationInFrames={Math.floor(fps * durationInSeconds)}>
-      {children}
-    </Loop>
-  );
+  return <Loop durationInFrames={durationInFrames}>{children}</Loop>;
 };
 
 export default LoopedOffthreadVideoContainer;
